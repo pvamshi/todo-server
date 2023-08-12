@@ -1,88 +1,35 @@
 
 // import { Server, Request, ResponseToolkit } from "@hapi/hapi";
-// import { PrismaClient, Task } from '@prisma/client'
-
-// import express from 'express'
+import { PrismaClient, Task } from '@prisma/client'
 
 const express = require('express')
 const app = express();
 const port = 3000;
+const prisma = new PrismaClient()
+
+app.use(express.json());
+
+const getTasks = () => {
+	return prisma.task.findMany();
+}
 app.get('/', (req, res) => {
 	res.send('hello world')
 })
 
+app.get('/api/todo', async (req, res) => {
+	res.json(await getTasks())
+})
+
+app.post('/api/todo', async (req, res) => {
+	console.log('body', req.body, req.headers)
+	const addedTask = await prisma.task.create({
+		data: req.body as Task
+	});
+	res.status(201).json(addedTask)
+
+})
 app.listen(port, () => {
 	console.log('server running on port', port)
 })
 
-// const prisma = new PrismaClient()
 
-// const getTasks = () => {
-// 	return prisma.task.findMany();
-// }
-//
-// const init = async () => {
-// 	const server: Server = new Server({
-// 		port: 3000,
-// 		host: 'localhost',
-// 	});
-// 	server.route({
-// 		method: 'GET',
-// 		path: '/',
-// 		handler: async (request: Request, h: ResponseToolkit) => {
-// 			return 'Helo'
-// 		}
-// 	});
-
-	// server.route({
-	// 	method: "GET",
-	// 	path: '/api/todo',
-	// 	handler: async (request: Request, h: ResponseToolkit) => {
-	// 		const tasks = await getTasks()
-	// 		// await prisma.$disconnect()
-	// 		return tasks;
-	// 	}
-	// })
-	// server.route({
-	// 	method: "POST",
-	// 	path: '/api/todo',
-	// 	handler: async (request: Request, h: ResponseToolkit) => {
-	// 		console.log(typeof request.payload)
-	// 		const tasks = await getTasks()
-	// 		// await prisma.$disconnect()
-	// 		await prisma.task.create({
-	// 			data: request.payload as Task
-	// 		})
-	// 		return tasks;
-	// 	}
-	// })
-	// await server.start();
-// 	console.log('Server running on %s', server.info.uri);
-// };
-// process.on('unhandledRejection', (err) => {
-// 	console.log(err);
-// 	process.exit(1);
-// });
-// init();
-//
-//
-// async function main() {
-// 	// await prisma.task.create({
-// 	// 	data: {
-// 	// 		title: 'first task',
-// 	// 		content: "the first task details"
-// 	// 	}
-// 	// })
-// 	const data = await prisma.task.findMany();
-// 	console.log(data)
-// }
-//
-// main()
-// 	.then(async () => {
-// 		await prisma.$disconnect()
-// 	})
-// 	.catch(async (e) => {
-// 		console.error(e)
-// 		await prisma.$disconnect()
-// 		process.exit(1)
-// 	})
