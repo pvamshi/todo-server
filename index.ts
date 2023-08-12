@@ -1,58 +1,69 @@
 
-import { Server, Request, ResponseToolkit } from "@hapi/hapi";
-import { PrismaClient, Task } from '@prisma/client'
+// import { Server, Request, ResponseToolkit } from "@hapi/hapi";
+// import { PrismaClient, Task } from '@prisma/client'
 
+// import express from 'express'
 
+const express = require('express')
+const app = express();
+const port = 3000;
+app.get('/', (req, res) => {
+	res.send('hello world')
+})
 
-const prisma = new PrismaClient()
+app.listen(port, () => {
+	console.log('server running on port', port)
+})
 
-const getTasks = () => {
-	return prisma.task.findMany();
-}
+// const prisma = new PrismaClient()
 
-const init = async () => {
-	const server: Server = new Server({
-		port: 3000,
-		host: 'localhost',
-	});
-	server.route({
-		method: 'GET',
-		path: '/',
-		handler: async (request: Request, h: ResponseToolkit) => {
-			return 'Helo'
-		}
-	});
+// const getTasks = () => {
+// 	return prisma.task.findMany();
+// }
+//
+// const init = async () => {
+// 	const server: Server = new Server({
+// 		port: 3000,
+// 		host: 'localhost',
+// 	});
+// 	server.route({
+// 		method: 'GET',
+// 		path: '/',
+// 		handler: async (request: Request, h: ResponseToolkit) => {
+// 			return 'Helo'
+// 		}
+// 	});
 
-	server.route({
-		method: "GET",
-		path: '/api/todo',
-		handler: async (request: Request, h: ResponseToolkit) => {
-			const tasks = await getTasks()
-			// await prisma.$disconnect()
-			return tasks;
-		}
-	})
-	server.route({
-		method: "POST",
-		path: '/api/todo',
-		handler: async (request: Request, h: ResponseToolkit) => {
-			console.log(typeof request.payload)
-			const tasks = await getTasks()
-			// await prisma.$disconnect()
-			await prisma.task.create({
-				data: request.payload as Task
-			})
-			return tasks;
-		}
-	})
-	await server.start();
-	console.log('Server running on %s', server.info.uri);
-};
-process.on('unhandledRejection', (err) => {
-	console.log(err);
-	process.exit(1);
-});
-init();
+	// server.route({
+	// 	method: "GET",
+	// 	path: '/api/todo',
+	// 	handler: async (request: Request, h: ResponseToolkit) => {
+	// 		const tasks = await getTasks()
+	// 		// await prisma.$disconnect()
+	// 		return tasks;
+	// 	}
+	// })
+	// server.route({
+	// 	method: "POST",
+	// 	path: '/api/todo',
+	// 	handler: async (request: Request, h: ResponseToolkit) => {
+	// 		console.log(typeof request.payload)
+	// 		const tasks = await getTasks()
+	// 		// await prisma.$disconnect()
+	// 		await prisma.task.create({
+	// 			data: request.payload as Task
+	// 		})
+	// 		return tasks;
+	// 	}
+	// })
+	// await server.start();
+// 	console.log('Server running on %s', server.info.uri);
+// };
+// process.on('unhandledRejection', (err) => {
+// 	console.log(err);
+// 	process.exit(1);
+// });
+// init();
 //
 //
 // async function main() {

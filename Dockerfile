@@ -1,21 +1,22 @@
 # syntax=docker/dockerfile:1
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /app
 # COPY package.json and package-lock.json files
-COPY package*.json ./
+# COPY package*.json ./
 
 # generated prisma files
-COPY prisma ./prisma/
+# COPY prisma ./prisma/
 
 # COPY ENV variable
-COPY .env ./
+# COPY .env ./
 
 # COPY tsconfig.json file
-COPY tsconfig.json ./
+# COPY tsconfig.json ./
 
 # COPY
 COPY . .
-RUN npm install --production
-RUN npx prisma generate
+RUN npm install
+RUN npm run build
+# RUN npx prisma generate
 EXPOSE 3000
-CMD npm start
+CMD ["node", "dist"]
