@@ -2,8 +2,9 @@
 FROM node:20-alpine
 WORKDIR /app
 # COPY package.json and package-lock.json files
-# COPY package*.json ./
+COPY package*.json ./
 
+RUN npm install
 # generated prisma files
 # COPY prisma ./prisma/
 
@@ -15,8 +16,7 @@ WORKDIR /app
 
 # COPY
 COPY . .
-RUN npm install
+RUN npx prisma generate
 RUN npm run build
-# RUN npx prisma generate
 EXPOSE 3000
 CMD ["npm","run", "serve"]

@@ -12,51 +12,15 @@ services:
     volumes:
       - mysql:/var/lib/mysql
   prisma-node-api:
-    # stdin_open: true
+    #image: docker.io/pvamshi/todo-server:latest
     build:
       context: .
       dockerfile: Dockerfile
-    # container_name: todo-server
+    environment:
+      DATABASE_URL: mysql://root:pass@db:3306/tasks_db?connection_limit=5
     depends_on:
       - db
     ports:
       - "3000:3000"
 volumes:
   mysql:
-    # expose:
-      # - "3000"
-    # restart: always
-# version: "3.9"
-# services:
-#   mysql:
-#     image: mysql:latest
-#     container_name: nodejs-mysql
-#     hostname: localhost
-#     ports:
-#       - '3306:3306'
-#     expose:
-#       - '3306'
-#     environment:
-#       MYSQL_DATABASE: tasks_db
-#       MYSQL_ROOT_USER: root
-#       MYSQL_ROOT_PASSWORD: pass
-#       MYSQL_ROOT_HOST: localhost
-# 
-#     volumes:
-#       - mysql-data:/var/lib/mysql/data
-#     restart: unless-stopped
-# 
-#   prisma-node-api:
-#     stdin_open: true
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     container_name: todo-server
-#     depends_on:
-#       - mysql
-#     ports:
-#       - "3000:3000"
-#     restart: always
-# 
-# volumes:
-#   mysql-data:
